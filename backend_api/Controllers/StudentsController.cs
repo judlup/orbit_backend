@@ -1,6 +1,8 @@
-﻿using backend_api.Model;
+﻿using backend_api.Data;
+using backend_api.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 namespace backend_api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class StudentsController : ControllerBase
-    {
+    {         
         List<Student> _oStudents = new List<Student>() {
             new Student()
             {
@@ -42,7 +44,8 @@ namespace backend_api.Controllers
                 Age = 3,
                 Career = "Brother"
             }
-        };
+        };        
+
         [HttpGet]
         public IActionResult Gets()
         {
@@ -55,7 +58,7 @@ namespace backend_api.Controllers
 
         [HttpGet("GetStudent")]
         public IActionResult Get(int id)
-        {
+        {            
             var oStudent = _oStudents.SingleOrDefault(x => x.Id == id);
             if(oStudent == null)
             {
@@ -67,14 +70,23 @@ namespace backend_api.Controllers
 
         [HttpPost]
         public IActionResult Save(Student oStudent)
-        {
-            _oStudents.Add(oStudent);
-            if(_oStudents.Count == 0)
+        {            
+            using (var dbContext = new SqliteDbContext())
             {
-                return NotFound("No list found");
-            }
+                Student student = new Student()
+                {                    
+                    Username = oStudent.Username,
+                    FirstName = oStudent.FirstName,
+                    LastName = oStudent.LastName,
+                    Age = oStudent.Age,
+                    Career = oStudent.Career
+                };
 
-            return Ok(_oStudents);
+                dbContext.Add(student);
+                dbContext.SaveChanges();
+
+                return Ok(student);
+            }            
         }
 
         [HttpDelete]
