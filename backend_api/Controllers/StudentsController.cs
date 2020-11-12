@@ -114,26 +114,14 @@ namespace backend_api.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateStudent(Student oStudent)
+        public IActionResult UpdateStudent(Student Student)
         {
-            Student student = _oStudents.SingleOrDefault(x => x.Id == oStudent.Id);
-            if (oStudent == null)
-            {
-                return NotFound("No student found");
-            }
-
-            student.Username = oStudent.Username;
-            student.FirstName = oStudent.FirstName;
-            student.LastName = oStudent.LastName;
-            student.Age = oStudent.Age;
-            student.Career = oStudent.Career;
-
-            if (_oStudents.Count == 0)
-            {
-                return NotFound("No list found");
-            }
-
-            return Ok(_oStudents);
+            using (var dbContext = new SqliteDbContext())
+            {                
+                dbContext.Update(Student);
+                dbContext.SaveChanges();
+                return Ok(Student);
+            }         
         }        
     }
 }
