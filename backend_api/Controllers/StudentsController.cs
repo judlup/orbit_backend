@@ -14,39 +14,7 @@ namespace backend_api.Controllers
     [Route("api/[controller]")]
     [ApiController]    
     public class StudentsController : ControllerBase
-    {        
-        List<Student> _oStudents = new List<Student>() {
-            new Student()
-            {
-                Id = 1,
-                Username = "Judlup",
-                FirstName = "Julian",
-                LastName = "Luna",
-                Age = 28,
-                Career = "Software development"
-            },
-
-            new Student()
-            {
-                Id = 2,
-                Username = "nikol",
-                FirstName = "Nikol",
-                LastName = "Luna",
-                Age = 3,
-                Career = "Daughter"
-            },
-
-            new Student()
-            {
-                Id = 3,
-                Username = "daniel",
-                FirstName = "Daniel",
-                LastName = "Luna",
-                Age = 3,
-                Career = "Brother"
-            }
-        };        
-
+    {                       
         [HttpGet]
         public IActionResult Gets()
         {
