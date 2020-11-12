@@ -99,19 +99,18 @@ namespace backend_api.Controllers
         [HttpDelete]
         public IActionResult DeleteStudent(int id)
         {
-            var oStudent = _oStudents.SingleOrDefault(x => x.Id == id);
-            if(oStudent == null)
-            {
-                return NotFound("No student found");
+            using (var dbContext = new SqliteDbContext())
+            {                
+                var Student = dbContext.Students.SingleOrDefault(x => x.Id == id);
+                if (Student == null)
+                {
+                    return NotFound("No student found");
+                }
+                dbContext.Students.Remove(Student);
+                dbContext.SaveChanges();
+                return Ok("Register deleted successfully ");
             }
-            _oStudents.Remove(oStudent);
-
-            if(_oStudents.Count == 0)
-            {
-                return NotFound("No list found");
-            }
-
-            return Ok(_oStudents);
+                                    
         }
 
         [HttpPut]
