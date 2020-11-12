@@ -3,6 +3,7 @@ using backend_api.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace backend_api.Controllers
     [Route("api/[controller]")]
     [ApiController]    
     public class StudentsController : ControllerBase
-    {         
+    {        
         List<Student> _oStudents = new List<Student>() {
             new Student()
             {
@@ -49,11 +50,15 @@ namespace backend_api.Controllers
         [HttpGet]
         public IActionResult Gets()
         {
-            if (_oStudents.Count == 0)
+            using (var dbContext = new SqliteDbContext())
             {
-                return NotFound("No list found");
-            }
-            return Ok(_oStudents);
+                var students = dbContext.Students.ToListAsync();
+                if (students == null)
+                {
+                    return NotFound("No student found");
+                }
+                return Ok(students);
+            }            
         }
 
         [HttpGet("GetStudent")]
