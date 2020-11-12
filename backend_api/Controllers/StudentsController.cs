@@ -1,5 +1,6 @@
 ﻿using backend_api.Data;
 using backend_api.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace backend_api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]")]    
     [ApiController]    
     public class StudentsController : ControllerBase
-    {                       
-        [HttpGet]
+    {        
+        [HttpGet]        
         public IActionResult Gets()
         {
             using (var dbContext = new SqliteDbContext())
@@ -75,8 +76,8 @@ namespace backend_api.Controllers
                     return NotFound("No student found");
                 }
                 dbContext.Students.Remove(Student);
-                dbContext.SaveChanges();
-                return Ok("Register deleted successfully ");
+                dbContext.SaveChanges();                
+                return Ok(Student);
             }
                                     
         }
@@ -87,7 +88,7 @@ namespace backend_api.Controllers
             using (var dbContext = new SqliteDbContext())
             {                
                 dbContext.Update(Student);
-                dbContext.SaveChanges();
+                //dbContext.SaveChanges();
                 return Ok(Student);
             }         
         }        
