@@ -63,14 +63,16 @@ namespace backend_api.Controllers
 
         [HttpGet("GetStudent")]
         public IActionResult Get(int id)
-        {            
-            var oStudent = _oStudents.SingleOrDefault(x => x.Id == id);
-            if(oStudent == null)
+        {
+            using (var dbContext = new SqliteDbContext())
             {
-                return NotFound("No student found.");
+                var students = dbContext.Students.SingleOrDefault(x => x.Id  == id);
+                if (students == null)
+                {
+                    return NotFound("No student found");
+                }
+                return Ok(students);
             }
-
-            return Ok(oStudent);
         }
 
         [HttpPost]
